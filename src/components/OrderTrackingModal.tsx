@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Search, Truck, CheckCircle2, Clock, Package, AlertCircle } from 'lucide-react';
 import { Order } from '../types';
 import { fetchOrderByIdOrNumber } from '../services/api';
+import { LUXURY_EASE } from '../utils/motion';
 
 interface OrderTrackingModalProps {
   isOpen: boolean;
@@ -25,8 +27,6 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
       handleSearch(initialOrderNumber);
     }
   }, [isOpen, initialOrderNumber]);
-
-  if (!isOpen) return null;
 
   const handleSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
@@ -70,8 +70,23 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
   const currentStep = order ? getStepIndex(order.orderStatus) : 0;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
-      <div className="bg-[#faf8f5] w-full max-w-2xl rounded-xs shadow-2xl border border-[#e7dfd5] overflow-hidden my-auto max-h-[95vh] flex flex-col">
+    <AnimatePresence>
+      {isOpen && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: LUXURY_EASE }}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.94, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.94, y: 12 }}
+        transition={{ duration: 0.35, ease: LUXURY_EASE }}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#faf8f5] w-full max-w-2xl rounded-xs shadow-2xl border border-[#e7dfd5] overflow-hidden my-auto max-h-[95vh] flex flex-col">
         {/* Header */}
         <div className="px-6 py-4 border-b border-[#e7dfd5] bg-[#faf8f5] flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -223,7 +238,9 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

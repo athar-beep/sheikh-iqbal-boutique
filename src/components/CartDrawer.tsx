@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Trash2, ShoppingBag, ArrowRight, Tag, Check, Sparkles } from 'lucide-react';
 import { CartItem } from '../types';
 import { validateCoupon } from '../services/api';
 import { getSafeImageUrl, handleImageError } from '../utils/imageFallback';
+import { LUXURY_EASE } from '../utils/motion';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -31,8 +33,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [couponError, setCouponError] = useState<string | null>(null);
   const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-
-  if (!isOpen) return null;
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + (item.salePrice || item.price) * item.quantity,
@@ -76,8 +76,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-xs flex justify-end animate-fadeIn">
-      <div className="w-full max-w-md bg-[#faf8f5] shadow-2xl flex flex-col h-full border-l border-[#e7dfd5]">
+    <AnimatePresence>
+      {isOpen && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: LUXURY_EASE }}
+      className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-xs flex justify-end"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ duration: 0.45, ease: LUXURY_EASE }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md bg-[#faf8f5] shadow-2xl flex flex-col h-full border-l border-[#e7dfd5]">
         {/* Cart Header */}
         <div className="p-5 border-b border-[#e7dfd5] flex items-center justify-between bg-[#faf8f5]">
           <div className="flex items-center space-x-2">
@@ -286,7 +301,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </p>
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

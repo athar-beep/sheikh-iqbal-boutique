@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Search, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
 import { formatPKR } from '../utils/format';
 import { getSafeImageUrl, handleImageError } from '../utils/imageFallback';
+import { LUXURY_EASE } from '../utils/motion';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -32,11 +34,24 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     );
   }, [searchTerm, products]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm p-4 sm:p-6 flex items-start justify-center pt-20">
-      <div className="relative bg-[#faf8f5] w-full max-w-2xl rounded-xl shadow-2xl border border-[#e7dfd5] overflow-hidden">
+    <AnimatePresence>
+      {isOpen && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: LUXURY_EASE }}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm p-4 sm:p-6 flex items-start justify-center pt-20"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -16, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -16, scale: 0.97 }}
+        transition={{ duration: 0.35, ease: LUXURY_EASE }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative bg-[#faf8f5] w-full max-w-2xl rounded-xl shadow-2xl border border-[#e7dfd5] overflow-hidden">
         {/* Search Input Bar */}
         <div className="p-4 bg-white border-b border-[#e7dfd5] flex items-center gap-3">
           <Search className="w-5 h-5 text-[#9e7d23]" />
@@ -110,7 +125,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             ))
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

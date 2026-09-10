@@ -31,7 +31,7 @@ function SheikhIqbalStoreApp() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
-  const { setIsCartOpen } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart } = useCart();
   const { isAdmin } = useAuth();
 
   // Load catalog and categories from backend
@@ -164,7 +164,18 @@ function SheikhIqbalStoreApp() {
 
           {/* Slide-over Cart Drawer */}
           <CartDrawer
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            cartItems={cart}
+            onUpdateQuantity={(cartItemId, newQty) => {
+              const item = cart.find((i) => i.cartItemId === cartItemId);
+              if (item) updateQuantity(cartItemId, newQty - item.quantity);
+            }}
+            onRemoveItem={removeFromCart}
+            freeShippingThreshold={5000}
+            flatShippingFee={250}
             onProceedToCheckout={() => {
+              setIsCartOpen(false);
               setCurrentView('checkout');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
