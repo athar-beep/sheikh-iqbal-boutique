@@ -1,0 +1,6 @@
+{
+  "name": "ZAUQ Luxury Atelier",
+  "description": "Sheikh Iqbal Cloth & Boutique Centre — Production-ready Pakistani luxury pret, festive unstitched cloth, and boutique couture e-commerce platform with real order management, Cash on Delivery, JazzCash/Easypaisa payment architecture, and admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
