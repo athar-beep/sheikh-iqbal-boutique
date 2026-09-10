@@ -2,13 +2,13 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
-import { db } from './server/db.js';
-import { paymentService } from './server/paymentService.js';
-import { generateStylingConsultation } from './server/geminiStylist.js';
-import { authenticateToken, requireAdmin, generateAuthToken, AuthenticatedRequest, verifyAuthToken } from './server/authMiddleware.js';
-import { ADMIN_EMAIL, ADMIN_PASSWORD } from './server/config.js';
+import { db } from './server/db';
+import { paymentService } from './server/paymentService';
+import { generateStylingConsultation } from './server/geminiStylist';
+import { authenticateToken, requireAdmin, generateAuthToken, AuthenticatedRequest, verifyAuthToken } from './server/authMiddleware';
+import { ADMIN_EMAIL, ADMIN_PASSWORD } from './server/config';
 import bcrypt from 'bcrypt';
-import { paymentProviders } from './server/payments.js';
+import { paymentProviders } from './server/payments';
 
 
 const app = express();
